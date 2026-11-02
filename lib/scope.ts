@@ -294,7 +294,12 @@ class Scope extends EventEmitter {
     }
   }
 
-  filteringPath() {
+  filteringPath(filter: (path: string) => string): this
+  filteringPath(regex: RegExp, replacement: string): this
+  filteringPath(
+    filter: RegExp | ((path: string) => string),
+    replacement?: string,
+  ) {
     this.transformPathFunction = this.buildFilter.apply(this, arguments as any)
     if (!this.transformPathFunction) {
       throw new Error(
@@ -304,7 +309,14 @@ class Scope extends EventEmitter {
     return this
   }
 
-  filteringRequestBody() {
+  filteringRequestBody(
+    filter: (body: string, recordedBody: string) => string,
+  ): this
+  filteringRequestBody(regex: RegExp, replacement: string): this
+  filteringRequestBody(
+    filter: RegExp | ((body: string, recordedBody: string) => string),
+    replacement?: string,
+  ) {
     this.transformRequestBodyFunction = this.buildFilter.apply(
       this,
       arguments as any,
